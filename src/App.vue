@@ -1,17 +1,22 @@
 <template>
   <div id="app">
   <Header/>
-
+  <CustomerTab/>
+  <NativeTable/>
   </div>
 </template>
 
 <script>
 import Header from './components/Header.vue'
+import CustomerTab from './components/CustomerTab.vue'
+import NativeTable from "./components/NativeTable";
 
 export default {
   name: 'App',
   components: {
-    Header
+    NativeTable,
+    Header,
+    CustomerTab
   }
 }
 </script>
