@@ -137,10 +137,16 @@
         <b-button size="sm" @click="info(row.item, row.index, $event.target)" class="mr-1">
           Info modal
         </b-button>
+
+        <b-button size="sm" @click="report(row.item, row.index, $event.target)" class="mr-1">
+          Report modal
+        </b-button>
+
+
         <b-button size="sm" @click="row.toggleDetails">
           {{ row.detailsShowing ? 'Hide' : 'Show' }} Details
         </b-button>
-      </template>
+      </template>,,
 
       <template #row-details="row">
         <b-card>
@@ -155,6 +161,21 @@
     <b-modal :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
       <pre>{{ infoModal.content }}</pre>
     </b-modal>
+
+    <!-- Report form  modal -->
+
+    <b-modal id="reportF"
+             @ok="handleOk(reportModal.customerId)"
+
+    >
+      <b-row class="mb-1">
+        <input type="text"  v-model="reportModal.fname"/>
+        <input type="text"  v-model="reportModal.arrivalTime"/>
+        <input type="text" placeholder="Your comment" v-model="reportModal.comment"/>
+      </b-row>
+    </b-modal>
+
+
   </b-container>
 </template>
 
@@ -184,6 +205,12 @@
           id: 'info-modal',
           title: '',
           content: ''
+        },
+        reportModal: {
+          fname: '',
+          arrivalTime: null,
+          comment: '',
+          phone:''
         }
       }
     },
@@ -223,10 +250,19 @@
         this.$root.$emit('bv::show::modal', this.infoModal.id, button);
       },
       report(item, index, button) {
-        this.infoModal.title = `Row index: ${index}`;
-        this.infoModal.content = JSON.stringify(item, null, 2);
-        this.$root.$emit('bv::show::modal', this.infoModal.id, button);
+        this.reportModal.fname = item.fname;
+        this.reportModal.arrivalTime = item.arrivalTime;
+        this.reportModal.phone = item.phone;
+        this.reportModal.customerId = item.customerId;
+
+        //call report action
+        this.$root.$emit('bv::show::modal', 'reportF', button);
       },
+
+      handleOk(customerId){
+        this.$store.dispatch('addReport',customerId);
+      },
+
       resetInfoModal() {
         this.infoModal.title = '';
         this.infoModal.content = '';

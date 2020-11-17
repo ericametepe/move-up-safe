@@ -7,11 +7,14 @@ const url ="http://localhost:8080/api/customers";
 
 const getCustomersRest= axios.get(url);
 
+const addReportRest=(customerId)=>axios.put(`${url}/${customerId}/reports`);
+
 
 
 const state={
 customers:[],
-totalRows:0
+totalRows:0,
+reports:[]
 };
 
 const mutations ={
@@ -23,7 +26,14 @@ LOAD_TOTALROW(state, payload){
 },
  UPDATE_TROWS(state,payload){
     state.totalRows=payload;
+},
+
+ADD_REPORTS(state,payload){
+    state.reports.concat(payload);
 }
+
+
+
 
 };
 
@@ -45,7 +55,15 @@ async getCustomerAct({commit}){
 },
     updateRows({commit},payload){
         commit('UPDATE_TROWS',payload);
-    }
+    },
+
+    addReport({commit},customerId){
+       addReportRest(customerId)
+           .then(()=>
+              commit('ADD_REPORTS',customerId))
+           .catch(err => console.log(`${JSON.stringify(err)}`))
+    },
+
 };
 
 const store = new Vuex.Store({
